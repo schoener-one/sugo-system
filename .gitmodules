@@ -1,0 +1,11 @@
+[submodule "poky"]
+	path = poky
+	url = git://git.yoctoproject.org/poky
+	branch = warrior
+[submodule "meta-openembedded"]
+	path = meta-openembedded
+	url = git://git.openembedded.org/meta-openembedded
+	branch = warrior
+[submodule "meta-moco"]
+	path = meta-moco
+	url = https://schoener-one@bitbucket.org/schoenerone/meta-moco.git
