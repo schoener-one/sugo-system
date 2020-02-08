@@ -5,3 +5,4 @@ build/downloads/*
 build/sstate-cache/*
 build/tmp/*
 build/workspace/*
+build/bitbake-cookerdaemon.log
