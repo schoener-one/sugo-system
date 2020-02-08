@@ -1,0 +1,7 @@
+build/cache/*
+build/conf/sanity_info
+build/conf/templateconf.cfg
+build/downloads/*
+build/sstate-cache/*
+build/tmp/*
+build/workspace/*
