@@ -29,3 +29,7 @@ CLOSED
 * The initial call of systemd-firstboot starts interactive requests for
   locale language and time-zone settings. This has to be pre-configured
   at startup!
+  
+* GPIOs have to be setted up automatically on startup.
+
+* I2C module has to be loaded automatically on startup (modprobe i2c-dev).
