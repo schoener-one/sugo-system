@@ -8,7 +8,7 @@
 	branch = warrior
 [submodule "meta-moco"]
 	path = meta-moco
-	url = https://schoener-one@bitbucket.org/schoenerone/meta-moco.git
+	url = git@bitbucket.org:schoenerone/meta-moco.git
 [submodule "meta-raspberrypi"]
 	path = meta-raspberrypi
 	url = git://git.yoctoproject.org/meta-raspberrypi
