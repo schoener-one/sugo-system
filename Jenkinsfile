@@ -9,8 +9,7 @@ pipeline {
   stages {
     stage('yocto-build') {
       steps {
-        git(url: 'git clone git@bitbucket.org:schoenerone/moco-system.git', branch: 'master')
-        sh 'ls -lh .'
+        echo 'Test'
       }
     }
 
