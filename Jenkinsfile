@@ -9,7 +9,8 @@ pipeline {
   stages {
     stage('yocto-build') {
       steps {
-        echo 'Test'
+        echo 'Starting Yocto build'
+        sh 'ls -lh'
       }
     }
 
