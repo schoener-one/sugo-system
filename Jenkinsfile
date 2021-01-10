@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       image 'crops/poky:ubuntu-18.04'
-      args '--rm -it -v /home/jenkins/yocto/cache:/var/cache/yocto'
+      args '-v /home/jenkins/yocto/cache:/var/cache/yocto'
     }
 
   }
