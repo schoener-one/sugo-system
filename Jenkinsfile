@@ -10,7 +10,10 @@ pipeline {
     stage('yocto-build') {
       steps {
         echo 'Starting Yocto build'
-        sh './build.sh'
+        node(label: 'DOCKER') {
+          sh './build.sh'
+        }
+
       }
     }
 
