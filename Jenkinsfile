@@ -16,6 +16,14 @@ echo "SSTATE_DIR=$SSTATE_DIR"
       }
     }
 
+    stage('archive-artifacts') {
+      steps {
+        echo 'Archive artifacts'
+        archiveArtifacts(artifacts: 'build/tmp/deploy/images/raspberrypi3/core-image-base-moco-raspberrypi3.rpi-sdimg', followSymlinks: true, onlyIfSuccessful: true)
+        archiveArtifacts(artifacts: 'build/tmp/deploy/sdk/poky-*.sh', followSymlinks: true, onlyIfSuccessful: true)
+      }
+    }
+
   }
   environment {
     DL_DIR = '/var/cache/yocto/downloads'
