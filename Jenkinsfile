@@ -1,8 +1,7 @@
 pipeline {
   agent {
-    docker {
-      image 'crops/poky:ubuntu-18.04'
-      args '-v /home/jenkins/yocto/cache:/var/cache/yocto'
+    node {
+      label 'DOCKER'
     }
 
   }
@@ -10,10 +9,7 @@ pipeline {
     stage('yocto-build') {
       steps {
         echo 'Starting Yocto build'
-        node(label: 'DOCKER') {
-          sh './build.sh'
-        }
-
+        sh 'docker run --rm -it -v $PWD:/workdir -v $HOME/yocto/cache:/var/cache/yocto --env DL_DIR --env SSTATE_DIR crops/poky:ubuntu-18.04 --workdir=/workdir ls -lh'
       }
     }
 
