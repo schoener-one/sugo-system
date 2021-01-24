@@ -10,7 +10,9 @@ pipeline {
     stage('yocto-build') {
       steps {
         echo 'Starting Yocto build'
-        sh 'ls -lh'
+        sh '''echo "DL_DIR=$DL_DIR"
+echo "SSTATE_DIR=$SSTATE_DIR"
+./build.sh'''
       }
     }
 
