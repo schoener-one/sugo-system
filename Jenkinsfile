@@ -9,7 +9,7 @@ pipeline {
     stage('yocto-build') {
       steps {
         echo 'Starting Yocto build'
-        sh 'docker run --rm -t -v $PWD:/workdir -v $HOME/yocto/cache:/var/cache/yocto --env DL_DIR --env SSTATE_DIR crops/poky:ubuntu-18.04 --workdir=/workdir ./build.sh'
+        sh 'docker run --rm -t --network host -v $PWD:/workdir -v $HOME/yocto/cache:/var/cache/yocto --env DL_DIR --env SSTATE_DIR crops/poky:ubuntu-18.04 --workdir=/workdir ./build.sh'
       }
     }
 
