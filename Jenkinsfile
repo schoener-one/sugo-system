@@ -25,7 +25,7 @@ crops/poky:ubuntu-18.04 \\
     stage('archive-artifacts') {
       steps {
         echo 'Archive artifacts'
-        archiveArtifacts(artifacts: 'build/tmp/deploy/images/raspberrypi3/core-image-base-moco-raspberrypi3.rpi-sdimg', followSymlinks: true, onlyIfSuccessful: true)
+        archiveArtifacts(artifacts: 'build/tmp/deploy/images/raspberrypi3/core-image-base-moco-raspberrypi3-*.rpi-sdimg', followSymlinks: true, onlyIfSuccessful: true)
         archiveArtifacts(artifacts: 'build/tmp/deploy/sdk/poky-*.sh', followSymlinks: true, onlyIfSuccessful: true)
       }
     }
