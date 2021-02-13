@@ -6,9 +6,9 @@ pipeline {
 
   }
   stages {
-    stage('yocto-build') {
+    stage('Build system image') {
       steps {
-        echo 'Starting Yocto build'
+        echo 'Build system image'
         sh '''docker run --rm -t \\
 --network host \\
 -v $PWD:/workdir \\
@@ -18,15 +18,39 @@ pipeline {
 --env SSTATE_DIR \\
 crops/poky:ubuntu-18.04 \\
 --workdir=/workdir \\
-./build.sh'''
+./build.sh -b'''
       }
     }
 
-    stage('archive-artifacts') {
+    stage('Build system SDK') {
       steps {
-        echo 'Archive artifacts'
-        archiveArtifacts(artifacts: 'build/tmp/deploy/images/raspberrypi3/core-image-base-moco-raspberrypi3-*.rpi-sdimg', followSymlinks: true, onlyIfSuccessful: true)
-        archiveArtifacts(artifacts: 'build/tmp/deploy/sdk/poky-*.sh', followSymlinks: true, onlyIfSuccessful: true)
+        echo 'Build system SDK'
+        sh '''docker run --rm -t \\
+--network host \\
+-v $PWD:/workdir \\
+-v $HOME/yocto/cache:/var/cache/yocto \\
+-v $HOME/.ssh:/home/pokyuser/.ssh:ro \\
+--env DL_DIR \\
+--env SSTATE_DIR \\
+crops/poky:ubuntu-18.04 \\
+--workdir=/workdir \\
+./build.sh -s'''
+      }
+    }
+
+    stage('Pack up artifacts') {
+      steps {
+        echo 'Pack up artifacts'
+        sh '''./build.sh -p ${BUILD_NUMBER} \\
+-f "build/tmp/deploy/images/raspberrypi-cm3/core-image-base-moco-raspberrypi-cm3.rpi-sdimg" \\
+-f "build/tmp/deploy/sdk/poky-glibc-x86_64-core-image-base-moco-*.sh"'''
+      }
+    }
+
+    stage('Archive artifacts') {
+      steps {
+        echo 'Archive built artifacts'
+        archiveArtifacts(artifacts: 'moco-system*.tar.gz', onlyIfSuccessful: true, caseSensitive: true)
       }
     }
 

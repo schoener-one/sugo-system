@@ -1,0 +1,9 @@
+{
+    "project": {
+        "name": "moco-system",
+        "system": {
+            "version": "0.0.1",
+            "image": "core-image-base-moco"
+        }
+    }
+}
