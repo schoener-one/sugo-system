@@ -6,12 +6,11 @@ read_json()
 {
     cat $BASE_DIR/project.json |tr -d '\n' |sed "s/.*\"$1\":[^\"]*\"\\([^\"]*\\)\".*/\\1/g"
 }
+export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE DL_DIR SSTATE_DIR MOCO_SYSTEM_VERSION MOCO_BUILD_REVISION"
 PROJECT_NAME=$(read_json "name")
-SYSTEM_VERSION=$(read_json "version")
 SYSTEM_IMAGE=$(read_json "image")
-
-export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE DL_DIR SSTATE_DIR"
-BUILD_REVISION=$(git log -1 --pretty=format:"%h")
+export MOCO_SYSTEM_VERSION=$(read_json "version")
+export MOCO_BUILD_REVISION=$(git log -1 --pretty=format:"%h")
 BUILD_VERSION=
 MANIFEST_FILE=manifest.json
 
@@ -44,9 +43,9 @@ write_manifest()
     cat << EOF > manifest.json
 {
     "project": "$PROJECT_NAME",
-    "version": "$SYSTEM_VERSION",
+    "version": "$MOCO_SYSTEM_VERSION",
     "build" : {
-        "revision": "$BUILD_REVISION",
+        "revision": "$MOCO_BUILD_REVISION",
         "version": "$BUILD_VERSION" 
     }
 }
@@ -60,7 +59,7 @@ pack_artifacts()
     write_manifest
     BUILD_VERSION=$1
     shift
-    TAR_FILE="${PROJECT_NAME}-${SYSTEM_VERSION}-${BUILD_REVISION}.${BUILD_VERSION}.tar"
+    TAR_FILE="${PROJECT_NAME}-${MOCO_SYSTEM_VERSION}-${MOCO_BUILD_REVISION}.${BUILD_VERSION}.tar"
     tar -cvhf "$TAR_FILE" "$MANIFEST_FILE"
     for _FILE in $@; do
         _FILE_DIR=$(dirname "$_FILE")
