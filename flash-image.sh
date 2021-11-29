@@ -1,5 +1,5 @@
 #!/bin/bash
-IMAGE=./build/tmp/deploy/images/raspberrypi3/core-image-base-moco-raspberrypi3.rpi-sdimg
+IMAGE=./build/tmp/deploy/images/raspberrypi3/core-image-base-sugo-raspberrypi3.rpi-sdimg
 SD_MEM=/dev/mmcblk0
 if ! [[ -f "$IMAGE" ]]; then
   echo "error: image not found: $IMAGE"

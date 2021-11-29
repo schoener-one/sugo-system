@@ -1,9 +1,9 @@
 {
     "project": {
-        "name": "moco-system",
+        "name": "sugo-system",
         "system": {
-            "version": "0.0.1",
-            "image": "core-image-base-moco"
+            "version": "0.1.0",
+            "image": "core-image-base-sugo"
         }
     }
 }

@@ -1,19 +1,19 @@
-# MoCo System
+# Sugo System
 
-Moco System contains a complete embedded system
-based on Yocto which contains the Moco CoffeeAutomat application.
+Sugo System contains a complete embedded system
+based on Yocto which contains the Sugo CoffeeAutomat application.
 
 ## Installation
 
 Just start the Yocto build as follows:
 
 ```bash
-# ./build-image.sh
+./build.sh -b
 ```
 
 ## Using
 
-Flash the whole image (e.g. 'build/tmp/deploy/images/raspberrypi3/core-image-base-moco-raspberrypi3.rpi-sdimg')
+Flash the whole image (e.g. 'build/tmp/deploy/images/raspberrypi3/core-image-base-sugo-raspberrypi3.rpi-sdimg')
 into the flash memory of the target device (e.g. Raspberry PI 3)
 
 ## Contributing

@@ -42,21 +42,21 @@ crops/poky:ubuntu-18.04 \\
       steps {
         echo 'Pack up artifacts'
         sh '''./build.sh -p ${BUILD_NUMBER} \\
--f "build/tmp/deploy/images/raspberrypi-cm3/core-image-base-moco-raspberrypi-cm3.rpi-sdimg" \\
--f "build/tmp/deploy/sdk/poky-glibc-x86_64-core-image-base-moco-*.sh"'''
+-i "build/tmp/deploy/images/raspberrypi-cm3/core-image-base-sugo-raspberrypi-cm3.wic.bz2" \\
+-f "build/tmp/deploy/sdk/poky-glibc-x86_64-core-image-base-sugo-*.sh"'''
       }
     }
 
     stage('Archive artifacts') {
       steps {
         echo 'Archive built artifacts'
-        archiveArtifacts(artifacts: 'moco-system*.tar.gz', onlyIfSuccessful: true, caseSensitive: true)
+        archiveArtifacts(artifacts: 'sugo-system*.tar.gz', onlyIfSuccessful: true, caseSensitive: true)
       }
     }
 
   }
   environment {
     DL_DIR = '/var/cache/yocto/downloads'
-    SSTATE_DIR = '/var/cache/yocto/sstate'
+    SSTATE_DIR = '/var/cache/yocto/sugo/sstate'
   }
 }

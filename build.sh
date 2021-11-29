@@ -6,18 +6,33 @@ read_json()
 {
     cat $BASE_DIR/project.json |tr -d '\n' |sed "s/.*\"$1\":[^\"]*\"\\([^\"]*\\)\".*/\\1/g"
 }
-export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE DL_DIR SSTATE_DIR MOCO_SYSTEM_VERSION MOCO_BUILD_REVISION"
+export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE \
+  DL_DIR SSTATE_DIR \
+  SUGO_SYSTEM_VERSION \
+  SUGO_BUILD_REVISION \
+  ROOT_PASSWORD \
+  SUGO_SYSTEM_ONLY_BUILD"
 PROJECT_NAME=$(read_json "name")
 SYSTEM_IMAGE=$(read_json "image")
-export MOCO_SYSTEM_VERSION=$(read_json "version")
-export MOCO_BUILD_REVISION=$(git log -1 --pretty=format:"%h")
+export SUGO_SYSTEM_VERSION=$(read_json "version")
+export SUGO_BUILD_REVISION=$(git log -1 --pretty=format:"%h")
 BUILD_VERSION=
 MANIFEST_FILE=manifest.json
+ARTIFACT_DO_PACK=false
+ARTIFACT_IMAGE=
+ARTIFACT_SDK=
+
+prepare_cache()
+{
+  if [ -n "$DL_DIR" ] && ! [ -d "$DL_DIR" ]; then mkdir -p "$DL_DIR"; fi
+  if [ -n "$SSTATE_DIR" ] && ! [ -d "$SSTATE_DIR" ]; then mkdir -p "$SSTATE_DIR"; fi
+}
 
 build_image()
 {
     echo "###############################################"
     echo "Build image '$SYSTEM_IMAGE'..."
+    prepare_cache
     umask 0022
     source ./poky/oe-init-build-env
     bitbake "$SYSTEM_IMAGE" || exit 1
@@ -27,6 +42,7 @@ build_sdk()
 {
     echo "###############################################"
     echo "Build image '$SYSTEM_IMAGE' SDK..."
+    prepare_cache
     umask 0022
     source ./poky/oe-init-build-env
     bitbake -c populate_sdk "$SYSTEM_IMAGE" || exit 1
@@ -43,9 +59,9 @@ write_manifest()
     cat << EOF > manifest.json
 {
     "project": "$PROJECT_NAME",
-    "version": "$MOCO_SYSTEM_VERSION",
+    "version": "$SUGO_SYSTEM_VERSION",
     "build" : {
-        "revision": "$MOCO_BUILD_REVISION",
+        "revision": "$SUGO_BUILD_REVISION",
         "version": "$BUILD_VERSION" 
     }
 }
@@ -59,7 +75,7 @@ pack_artifacts()
     write_manifest
     BUILD_VERSION=$1
     shift
-    TAR_FILE="${PROJECT_NAME}-${MOCO_SYSTEM_VERSION}-${MOCO_BUILD_REVISION}.${BUILD_VERSION}.tar"
+    TAR_FILE="${PROJECT_NAME}-${SUGO_SYSTEM_VERSION}-${SUGO_BUILD_REVISION}.${BUILD_VERSION}.tar"
     tar -cvhf "$TAR_FILE" "$MANIFEST_FILE"
     for _FILE in $@; do
         _FILE_DIR=$(dirname "$_FILE")
@@ -69,9 +85,7 @@ pack_artifacts()
     gzip -f "$TAR_FILE"
 }
 
-DO_PACK_ARTIFACTS=false
-
-while getopts "absf:p:" OPT; do
+while getopts "absf:i:p:" OPT; do
     case "$OPT" in
       a)
         build_all
@@ -84,11 +98,13 @@ while getopts "absf:p:" OPT; do
         ;;
       p)
         BUILD_VERSION="$OPTARG"
-        declare -a PACK_ARTIFACTS
-        DO_PACK_ARTIFACTS=true
+        ARTIFACT_DO_PACK=true
+        ;;
+      i)
+        ARTIFACT_IMAGE=("$OPTARG")
         ;;
       f)
-        PACK_ARTIFACTS+=("$OPTARG")
+        ARTIFACT_SDK=("$OPTARG")
         ;;
       [?])
         # got invalid option
@@ -100,6 +116,6 @@ done
 # get rid of the just-finished flag arguments
 shift $(($OPTIND-1))
 
-if $DO_PACK_ARTIFACTS; then
-    pack_artifacts $BUILD_VERSION "${PACK_ARTIFACTS[@]}"
+if $ARTIFACT_DO_PACK; then
+    pack_artifacts $BUILD_VERSION "${ARTIFACT_IMAGE}" "${ARTIFACT_SDK}"
 fi
