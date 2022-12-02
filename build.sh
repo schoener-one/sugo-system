@@ -6,7 +6,7 @@ read_json()
 {
     cat $BASE_DIR/project.json |tr -d '\n' |sed "s/.*\"$1\":[^\"]*\"\\([^\"]*\\)\".*/\\1/g"
 }
-export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE DL_DIR SSTATE_DIR MOCO_SYSTEM_VERSION MOCO_BUILD_REVISION ROOT_PASSWORD"
+export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE DL_DIR SSTATE_DIR MOCO_SYSTEM_VERSION MOCO_BUILD_REVISION"
 PROJECT_NAME=$(read_json "name")
 SYSTEM_IMAGE=$(read_json "image")
 export MOCO_SYSTEM_VERSION=$(read_json "version")
