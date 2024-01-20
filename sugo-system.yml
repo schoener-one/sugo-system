@@ -21,9 +21,9 @@ repos:
     branch: kirkstone
     commit: 8bad47eba3a56204a5b5d2a433b499398bda2173
   meta-sugo:
-    url: "git@bitbucket.org:schoenerone/sugo-meta-sugo.git"
-    #url: "https://github.com/schoener-one/meta-sugo.git"
-    branch: feat/prepare-for-github
+    url: "https://github.com/schoener-one/meta-sugo.git"
+    branch: master
+    commit: 38545ddcc3dfc3ea382bc5315325430a966ebb70
 
 machine: "raspberrypi3"
 target: "sugo-system-image"
