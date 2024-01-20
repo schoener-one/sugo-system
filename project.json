@@ -1,9 +1,0 @@
-{
-    "project": {
-        "name": "sugo-system",
-        "system": {
-            "version": "0.1.0",
-            "image": "core-image-base-sugo"
-        }
-    }
-}

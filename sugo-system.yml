@@ -1,0 +1,69 @@
+header:
+  version: 11
+
+repos:
+  poky: # (yocto-4.0.15 kirkstone)
+    url: "https://git.yoctoproject.org/poky"
+    branch: kirkstone
+    commit: 755632c2fcab43aa05cdcfa529727064b045073c
+    layers:
+      meta:
+      meta-poky:
+  meta-openembedded: # kirkstone
+    url: "https://git.openembedded.org/meta-openembedded"
+    branch: kirkstone
+    commit: 730e44900a0a86265bad93a16b5a5ff344a07266
+    layers:
+      meta-oe:
+      meta-python:
+  meta-raspberrypi: # kirkstone
+    url: "https://git.yoctoproject.org/meta-raspberrypi"
+    branch: kirkstone
+    commit: 8bad47eba3a56204a5b5d2a433b499398bda2173
+  meta-sugo:
+    url: "git@bitbucket.org:schoenerone/sugo-meta-sugo.git"
+    #url: "https://github.com/schoener-one/meta-sugo.git"
+    branch: feat/prepare-for-github
+
+machine: "raspberrypi3"
+target: "sugo-system-image"
+env: 
+  SUGO_SYSTEM_VERSION: "1.0.0"
+  SUGO_BUILD_REVISION: ""
+  ROOT_PASSWORD: ""
+  TEMP_DIR: "/work" #KAS working directory!
+
+local_conf_header:
+  meta-sugo: |
+    # Yocto general build settings
+    CONF_VERSION = "2"
+    PACKAGE_CLASSES ?= "package_rpm"
+    EXTRA_IMAGE_FEATURES ?= "debug-tweaks tools-debug tools-sdk"
+
+    DL_DIR ?= "${TEMP_DIR}/downloads"
+    SSTATE_DIR ?= "${TEMP_DIR}/sstate-cache"
+
+    # Raspberry PI feature configurations
+    ENABLE_SPI_BUS = "1"
+    ENABLE_I2C = "1"
+    ENABLE_UART = "1"
+    VIDEO_CAMERA = "1"
+
+    # Add systemctl init manager
+    DISTRO_FEATURES:append = " systemd"
+    DISTRO_FEATURES_BACKFILL_CONSIDERED += "sysvinit"
+    VIRTUAL-RUNTIME_login_manager = "shadow-base"
+    VIRTUAL-RUNTIME_init_manager = "systemd"
+    VIRTUAL-RUNTIME_initscripts = ""
+
+    # Remove unnessecary features
+    DISTRO_FEATURES:remove = " x11 wayland"
+
+    # Add devtools to sdk
+    TOOLCHAIN_HOST_TASK:append = " \
+        nativesdk-make \
+        nativesdk-googletest \
+        nativesdk-protobuf \
+        nativesdk-protobuf-compiler \
+        nativesdk-usbtool \
+    "
