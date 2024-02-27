@@ -5,27 +5,32 @@ repos:
   poky: # (yocto-4.0.15 kirkstone)
     url: "https://git.yoctoproject.org/poky"
     branch: kirkstone
-    commit: 755632c2fcab43aa05cdcfa529727064b045073c
+    commit: 0b39955d14600257a6eafc211fd68a933c69a0e9
     layers:
       meta:
       meta-poky:
   meta-openembedded: # kirkstone
     url: "https://git.openembedded.org/meta-openembedded"
     branch: kirkstone
-    commit: 730e44900a0a86265bad93a16b5a5ff344a07266
+    commit: 8609de00952d65bb813a48c535c937324efeb18a
     layers:
       meta-oe:
       meta-python:
+      meta-filesystems:
   meta-raspberrypi: # kirkstone
     url: "https://git.yoctoproject.org/meta-raspberrypi"
     branch: kirkstone
-    commit: 8bad47eba3a56204a5b5d2a433b499398bda2173
+    commit: 9dc6673d41044f1174551120ce63501421dbcd85
   meta-sugo:
     url: "https://github.com/schoener-one/meta-sugo.git"
-    branch: master
-    commit: 38545ddcc3dfc3ea382bc5315325430a966ebb70
-
-machine: "raspberrypi3"
+    branch: feat/over-the-air-update
+    commit: 3fa8aa26b10f238e109d4c664d28c75178ae5948
+  # meta-updater:
+  #   url: "https://github.com/uptane/meta-updater.git"
+  #   branch: kirkstone
+  #   commit: 3473dc7c88a16cea2e9a6365e22c2331464078f1
+    
+machine: "raspberrypi4-64"
 target: "sugo-system-image"
 env: 
   SUGO_SYSTEM_VERSION: "1.0.0"
@@ -39,6 +44,7 @@ local_conf_header:
     CONF_VERSION = "2"
     PACKAGE_CLASSES ?= "package_rpm"
     EXTRA_IMAGE_FEATURES ?= "debug-tweaks tools-debug tools-sdk"
+    # DISTRO = "poky-sota-systemd"
 
     DL_DIR ?= "${TEMP_DIR}/downloads"
     SSTATE_DIR ?= "${TEMP_DIR}/sstate-cache"
@@ -48,6 +54,13 @@ local_conf_header:
     ENABLE_I2C = "1"
     ENABLE_UART = "1"
     VIDEO_CAMERA = "1"
+    RPI_USE_U_BOOT = "1"
+    
+    # Use u-boot as bootloader
+    PREFERRED_PROVIDER_virtual/bootloader = "u-boot"
+
+    # Preempt-rt patch not supported any more in kirkstone release!
+    # PREFERRED_PROVIDER_virtual/kernel ?= "linux-raspberrypi-rt"
 
     # Add systemctl init manager
     DISTRO_FEATURES:append = " systemd"
@@ -58,6 +71,9 @@ local_conf_header:
 
     # Remove unnessecary features
     DISTRO_FEATURES:remove = " x11 wayland"
+
+    # Needed for ???
+    FORTRAN:forcevariable = ",fortran"
 
     # Add devtools to sdk
     TOOLCHAIN_HOST_TASK:append = " \
